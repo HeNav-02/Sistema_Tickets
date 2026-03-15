@@ -86,6 +86,39 @@ def ver_metricas():
 class LoginRequest(BaseModel):
     correo: str
     password: str
+
+@app.delete("/tickets/{ticket_id}")
+def eliminar_ticket(ticket_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "DELETE FROM metrics_logs WHERE ticket_id = %s",
+            (ticket_id,)
+        )
+
+        cursor.execute(
+            "DELETE FROM tickets WHERE ticket_id = %s RETURNING ticket_id",
+            (ticket_id,)
+        )
+
+        eliminado = cursor.fetchone()
+        conn.commit()
+
+        if eliminado:
+            return {"mensaje": "Ticket eliminado correctamente"}
+        else:
+            return {"mensaje": "Ticket no encontrado"}
+
+    except Exception as excepcion:
+        conn.rollback()
+        return {"error": str(excepcion)}
+
+    finally:
+        cursor.close()
+        conn.close()
+
 @app.post("/login")
 def login(request: LoginRequest):
 

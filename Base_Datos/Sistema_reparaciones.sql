@@ -45,7 +45,7 @@ CREATE TABLE tickets (
     usuario_creador INTEGER NOT NULL,
     tecnico_asignado INTEGER,
     descripcion_problema TEXT NOT NULL,
-    estado VARCHAR(50) DEFAULt 'Creado ',
+    estado VARCHAR(50) DEFAULt 'Creado',
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_cierre TIMESTAMP,
     FOREIGN KEY (equipo_id) REFERENCES equipos(equipo_id),
@@ -169,7 +169,7 @@ RETURNS TRIGGER AS $$
 DECLARE
     fecha_creacion TIMESTAMP;
 BEGIN
-    -- Solo calcular cuando el ticket se resuelve
+
     IF NEW.estado = 'Resuelto' THEN
 
         SELECT fecha_creacion
